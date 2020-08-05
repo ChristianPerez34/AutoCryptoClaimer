@@ -13,6 +13,6 @@ try:
 
     crypto_claimer = CryptoClaimer()
     crypto_claimer.collect_crypto_faucets(file_path)
-    crypto_claimer.start_browser()
+    crypto_claimer.start_collecting_crypto()
 except IndexError:
     raise SystemExit(f"Usage: {sys.argv[0]} <file_to_read>")
