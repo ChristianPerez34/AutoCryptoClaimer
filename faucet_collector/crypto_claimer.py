@@ -2,6 +2,7 @@ import time
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
@@ -13,8 +14,13 @@ class CryptoClaimer:
         self.driver = None
 
     def start_collecting_crypto(self):
-        self.driver = webdriver.Chrome()
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("window-size=1920,1080")
+
+        self.driver = webdriver.Chrome(chrome_options=chrome_options)
         self.driver.maximize_window()
+
         for url in self.crypto_faucets:
             print(f"Visiting {url}")
             self.driver.get(url)
@@ -133,17 +139,20 @@ class CryptoClaimer:
             account_button.click()
             balance = f'{self.driver.find_element_by_xpath("/html/body/section/div/div/div/div/div/div[2]/div[1]/div/div[1]/a").text} LTC'
         elif url in (
-                "https://freebinancecoin.com",
-                "https://freenem.com",
-                "https://freecardano.com",
-                "https://coinfaucet.io",
-                "https://freebitcoin.io",
-                "https://freetether.com",
-                "https://freeusdcoin.com",
-                "https://freeethereum.com",
-                "https://free-tron.com",
+            "https://freebinancecoin.com",
+            "https://freenem.com",
+            "https://freecardano.com",
+            "https://coinfaucet.io",
+            "https://freebitcoin.io",
+            "https://freetether.com",
+            "https://freeusdcoin.com",
+            "https://freeethereum.com",
+            "https://free-tron.com",
         ):
-            balance = self.driver.find_element_by_class_name("navbar-coins").find_element_by_tag_name("a").text
+            balance = (
+                self.driver.find_element_by_class_name("navbar-coins")
+                .find_element_by_tag_name("a")
+                .text
+            )
 
         print(f"Current balance: {balance}")
-
