@@ -20,6 +20,7 @@ class CryptoClaimer:
             self.driver.get(url)
             self.login(url=url)
             self.claim_faucet(url=url)
+            self.check_balance(url=url)
         self.driver.quit()
 
     def collect_crypto_faucets(self, crypto_faucets: str):
@@ -32,7 +33,7 @@ class CryptoClaimer:
 
     def claim_faucet(self, url: str):
         success_message = "Already claimed..."
-        print(f"Claiming crypto on {url}")
+        print(f"Claiming crypto...")
         if url == "https://free-litecoin.net":
             WebDriverWait(self.driver, 5).until(
                 expected_conditions.presence_of_element_located(
@@ -123,3 +124,26 @@ class CryptoClaimer:
             WebDriverWait(self.driver, 5).until(
                 lambda driver: driver.current_url != f"{url}/"
             )
+
+    def check_balance(self, url: str):
+        balance = ""
+
+        if url == "https://free-litecoin.net":
+            account_button = self.driver.find_element_by_link_text("ACCOUNT")
+            account_button.click()
+            balance = f'{self.driver.find_element_by_xpath("/html/body/section/div/div/div/div/div/div[2]/div[1]/div/div[1]/a").text} LTC'
+        elif url in (
+                "https://freebinancecoin.com",
+                "https://freenem.com",
+                "https://freecardano.com",
+                "https://coinfaucet.io",
+                "https://freebitcoin.io",
+                "https://freetether.com",
+                "https://freeusdcoin.com",
+                "https://freeethereum.com",
+                "https://free-tron.com",
+        ):
+            balance = self.driver.find_element_by_class_name("navbar-coins").find_element_by_tag_name("a").text
+
+        print(f"Current balance: {balance}")
+
