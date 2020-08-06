@@ -14,13 +14,16 @@ class CryptoClaimer:
 
     def start_collecting_crypto(self):
         self.driver = webdriver.Chrome()
+        self.driver.maximize_window()
         for url in self.crypto_faucets:
+            print(f"Visiting {url}")
             self.driver.get(url)
-            self.login(url=url,)
+            self.login(url=url)
             self.claim_faucet(url=url)
         self.driver.quit()
 
     def collect_crypto_faucets(self, crypto_faucets: str):
+        print("Collecting crypto faucets...")
         with open(crypto_faucets, "r") as file:
             lines = file.readlines()
             for line in lines:
@@ -28,6 +31,8 @@ class CryptoClaimer:
                 self.crypto_faucets.update({url: {"user": user, "password": password}})
 
     def claim_faucet(self, url: str):
+        success_message = "Already claimed..."
+        print(f"Claiming crypto on {url}")
         if url == "https://free-litecoin.net":
             WebDriverWait(self.driver, 5).until(
                 expected_conditions.presence_of_element_located(
@@ -43,6 +48,8 @@ class CryptoClaimer:
                     "/html/body/section/div/div/div/div/div/center/input"
                 )
                 claim_cryto.click()
+
+                success_message = self.driver.find_element_by_class_name("success").text
         elif url in (
             "https://freebinancecoin.com",
             "https://freenem.com",
@@ -60,13 +67,23 @@ class CryptoClaimer:
                         (By.CLASS_NAME, "roll-button")
                     )
                 ).click()
-                time.sleep(3)
+                success_message = (
+                    WebDriverWait(self.driver, 5)
+                    .until(
+                        expected_conditions.visibility_of_element_located(
+                            (By.CLASS_NAME, "result")
+                        )
+                    )
+                    .text
+                )
             except TimeoutException:
-                print("Already claimed!")
+                pass
+        print(success_message)
 
     def login(self, url: str):
-        user = (self.crypto_faucets[url]["user"],)
+        user = self.crypto_faucets[url]["user"]
         password = self.crypto_faucets[url]["password"]
+        print(f"Logging in...")
 
         if url == "https://free-litecoin.net":
 
@@ -101,10 +118,8 @@ class CryptoClaimer:
 
             submit_login_button = self.driver.find_element_by_class_name("login")
             time.sleep(1)
-            # self.driver.execute_script("window.scrollTo(0, window.scrollY + 200)")
             submit_login_button.click()
 
-            print(self.driver.current_url)
             WebDriverWait(self.driver, 5).until(
                 lambda driver: driver.current_url != f"{url}/"
             )
