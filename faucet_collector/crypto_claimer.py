@@ -14,13 +14,14 @@ class CryptoClaimer:
         self.crypto_faucets = {}
         self.browser = None
 
-    def start_driver(self, driver="chrome"):
-        browser = webdriver.Chrome
-        driver_options = ChromeOptions()
-
-        if driver == "firefox":
+    def start_driver(self, driver):
+        
+        if driver.lower() == "firefox":
             browser = webdriver.Firefox
             driver_options = FirefoxOptions()
+        else:
+            browser = webdriver.Chrome
+            driver_options = ChromeOptions()
 
         driver_options.add_argument("--headless")
         driver_options.add_argument("window-size=1920,1080")
