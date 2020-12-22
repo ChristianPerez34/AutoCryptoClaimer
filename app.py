@@ -7,9 +7,9 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from faucet_collector.crypto_claimer import CryptoClaimer
 
 
-def claim_crypto_job():
+def claim_crypto_job(driver="chrome"):
     crypto_claimer = CryptoClaimer()
-    crypto_claimer.start_driver()
+    crypto_claimer.start_driver(driver)
     crypto_claimer.collect_crypto_faucets(crypto_faucets_file)
     crypto_claimer.start_collecting_crypto()
 
@@ -24,7 +24,8 @@ if __name__ == "__main__":
         "--driver",
         action="store",
         default="chrome",
-        help="Browser name of web driver to use i.e (Chrome, Firefox, and so forth)",
+        help=
+        "Browser name of web driver to use i.e (Chrome, Firefox, and so forth)",
     )
     args = parser.parse_args()
 
@@ -36,7 +37,7 @@ if __name__ == "__main__":
         )
     scheduler.add_job(claim_crypto_job, "interval", hours=1)
     scheduler.start()
-    claim_crypto_job()
+    claim_crypto_job(args.driver)
 
     while True:
         time.sleep(1)

@@ -14,13 +14,14 @@ class CryptoClaimer:
         self.crypto_faucets = {}
         self.browser = None
 
-    def start_driver(self, driver="chrome"):
-        browser = webdriver.Chrome
-        driver_options = ChromeOptions()
+    def start_driver(self, driver):
 
-        if driver == "firefox":
+        if driver.lower() == "firefox":
             browser = webdriver.Firefox
             driver_options = FirefoxOptions()
+        else:
+            browser = webdriver.Chrome
+            driver_options = ChromeOptions()
 
         driver_options.add_argument("--headless")
         driver_options.add_argument("window-size=1920,1080")
@@ -44,7 +45,11 @@ class CryptoClaimer:
             lines = file.readlines()
             for line in lines:
                 url, user, password = line.split(";")
-                self.crypto_faucets.update({url: {"user": user, "password": password}})
+                self.crypto_faucets.update(
+                    {url: {
+                        "user": user,
+                        "password": password
+                    }})
 
     def claim_faucet(self, url: str):
         success_message = "Already claimed..."
@@ -52,46 +57,36 @@ class CryptoClaimer:
         if url == "https://free-litecoin.net":
             WebDriverWait(self.browser, 5).until(
                 expected_conditions.presence_of_element_located(
-                    (By.LINK_TEXT, "LITECOIN FAUCET")
-                )
-            ).click()
+                    (By.LINK_TEXT, "LITECOIN FAUCET"))).click()
             # faucet_button = self.driver.find_element_by_link_text("LITECOIN FAUCET")
             # faucet_button.click()
 
             element = self.browser.find_elements_by_class_name("warning")
             if not element or (element and not element[0].is_displayed()):
                 claim_cryto = self.browser.find_element_by_xpath(
-                    "/html/body/section/div/div/div/div/div/center/input"
-                )
+                    "/html/body/section/div/div/div/div/div/center/input")
                 claim_cryto.click()
 
-                success_message = self.browser.find_element_by_class_name("success").text
+                success_message = self.browser.find_element_by_class_name(
+                    "success").text
         elif url in (
-            "https://freebinancecoin.com",
-            "https://freenem.com",
-            "https://freecardano.com",
-            "https://coinfaucet.io",
-            "https://freebitcoin.io",
-            "https://freetether.com",
-            "https://freeusdcoin.com",
-            "https://freeethereum.com",
-            "https://free-tron.com",
+                "https://freebinancecoin.com",
+                "https://freenem.com",
+                "https://freecardano.com",
+                "https://coinfaucet.io",
+                "https://freebitcoin.io",
+                "https://freetether.com",
+                "https://freeusdcoin.com",
+                "https://freeethereum.com",
+                "https://free-tron.com",
         ):
             try:
                 WebDriverWait(self.browser, 5).until(
                     expected_conditions.element_to_be_clickable(
-                        (By.CLASS_NAME, "roll-button")
-                    )
-                ).click()
-                success_message = (
-                    WebDriverWait(self.browser, 5)
-                    .until(
-                        expected_conditions.visibility_of_element_located(
-                            (By.CLASS_NAME, "result")
-                        )
-                    )
-                    .text
-                )
+                        (By.CLASS_NAME, "roll-button"))).click()
+                success_message = (WebDriverWait(self.browser, 5).until(
+                    expected_conditions.visibility_of_element_located(
+                        (By.CLASS_NAME, "result"))).text)
             except TimeoutException:
                 pass
         print(success_message)
@@ -115,15 +110,15 @@ class CryptoClaimer:
             # submit_login_button = self.driver.find_element_by_class_name("main-btn")
             # submit_login_button.submit()
         elif url in (
-            "https://freebinancecoin.com",
-            "https://freenem.com",
-            "https://freecardano.com",
-            "https://coinfaucet.io",
-            "https://freebitcoin.io",
-            "https://freetether.com",
-            "https://freeusdcoin.com",
-            "https://freeethereum.com",
-            "https://free-tron.com",
+                "https://freebinancecoin.com",
+                "https://freenem.com",
+                "https://freecardano.com",
+                "https://coinfaucet.io",
+                "https://freebitcoin.io",
+                "https://freetether.com",
+                "https://freeusdcoin.com",
+                "https://freeethereum.com",
+                "https://free-tron.com",
         ):
 
             user_field = self.browser.find_element_by_name("email")
@@ -132,13 +127,14 @@ class CryptoClaimer:
             password_field = self.browser.find_element_by_name("password")
             password_field.send_keys(password)
 
-            submit_login_button = self.browser.find_element_by_class_name("login")
+            submit_login_button = self.browser.find_element_by_class_name(
+                "login")
             time.sleep(1)
             submit_login_button.click()
 
-            WebDriverWait(self.browser, 5).until(
-                lambda driver: driver.current_url != f"{url}/"
-            )
+            WebDriverWait(
+                self.browser,
+                5).until(lambda driver: driver.current_url != f"{url}/")
 
     def check_balance(self, url: str):
         balance = ""
@@ -148,20 +144,17 @@ class CryptoClaimer:
             account_button.click()
             balance = f'{self.browser.find_element_by_xpath("/html/body/section/div/div/div/div/div/div[2]/div[1]/div/div[1]/a").text} LTC'
         elif url in (
-            "https://freebinancecoin.com",
-            "https://freenem.com",
-            "https://freecardano.com",
-            "https://coinfaucet.io",
-            "https://freebitcoin.io",
-            "https://freetether.com",
-            "https://freeusdcoin.com",
-            "https://freeethereum.com",
-            "https://free-tron.com",
+                "https://freebinancecoin.com",
+                "https://freenem.com",
+                "https://freecardano.com",
+                "https://coinfaucet.io",
+                "https://freebitcoin.io",
+                "https://freetether.com",
+                "https://freeusdcoin.com",
+                "https://freeethereum.com",
+                "https://free-tron.com",
         ):
-            balance = (
-                self.browser.find_element_by_class_name("navbar-coins")
-                .find_element_by_tag_name("a")
-                .text
-            )
+            balance = (self.browser.find_element_by_class_name(
+                "navbar-coins").find_element_by_tag_name("a").text)
 
         print(f"Current balance: {balance}\n")
