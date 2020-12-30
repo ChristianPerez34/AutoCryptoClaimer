@@ -54,8 +54,7 @@ class CryptoClaimer:
             lines = file.readlines()
             for line in lines:
                 url, user, password = line.split(";")
-                self.crypto_faucets.update(
-                    {url: {"user": user, "password": password}})
+                self.crypto_faucets.update({url: {"user": user, "password": password}})
 
     def claim_faucet(self, url: str):
         success_message = "Already claimed..."
@@ -125,8 +124,7 @@ class CryptoClaimer:
             password_field = self.browser.find_element_by_name("pass")
             password_field.send_keys(password)
 
-            submit_login_button = self.browser.find_element_by_class_name(
-                "main-btn")
+            submit_login_button = self.browser.find_element_by_class_name("main-btn")
             submit_login_button.submit()
         elif url in (
             "https://freebinancecoin.com",
@@ -146,8 +144,7 @@ class CryptoClaimer:
             password_field = self.browser.find_element_by_name("password")
             password_field.send_keys(password)
 
-            submit_login_button = self.browser.find_element_by_class_name(
-                "login")
+            submit_login_button = self.browser.find_element_by_class_name("login")
             time.sleep(1)
             submit_login_button.click()
 
