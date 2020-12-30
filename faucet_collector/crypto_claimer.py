@@ -1,6 +1,7 @@
 import time
 
-from msedge.selenium_tools import Edge, EdgeOptions
+from msedge.selenium_tools import Edge
+from msedge.selenium_tools import EdgeOptions
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options as ChromeOptions
