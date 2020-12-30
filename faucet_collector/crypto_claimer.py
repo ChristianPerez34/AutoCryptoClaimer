@@ -1,5 +1,6 @@
 import time
 
+from msedge.selenium_tools import Edge, EdgeOptions
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -7,7 +8,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-from msedge.selenium_tools import Edge, EdgeOptions
 
 
 class CryptoClaimer:
