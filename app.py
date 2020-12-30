@@ -24,7 +24,8 @@ if __name__ == "__main__":
         "--driver",
         action="store",
         default="chrome",
-        help="Browser name of web driver to use i.e (Chrome, Firefox, and so forth)",
+        help=
+        "Browser name of web driver to use i.e (Chrome, Firefox, and so forth)",
     )
     args = parser.parse_args()
 
