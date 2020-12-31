@@ -1,5 +1,7 @@
 import time
 
+from msedge.selenium_tools import Edge
+from msedge.selenium_tools import EdgeOptions
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -15,16 +17,20 @@ class CryptoClaimer:
         self.browser = None
 
     def start_driver(self, driver):
-
-        if driver.lower() == "firefox":
+        driver = driver.lower()
+        if driver == "firefox":
             browser = webdriver.Firefox
             driver_options = FirefoxOptions()
+        elif driver == "edge":
+            browser = Edge
+            driver_options = EdgeOptions()
+            driver_options.use_chromium = True
         else:
             browser = webdriver.Chrome
             driver_options = ChromeOptions()
 
         driver_options.add_argument("--headless")
-        driver_options.add_argument("window-size=1920,1080")
+        # driver_options.add_argument("window-size=1920,1080")
         driver_options.add_argument("--log-level=3")
         self.browser = browser(options=driver_options, service_log_path="NUL")
 
@@ -32,11 +38,15 @@ class CryptoClaimer:
         self.browser.maximize_window()
 
         for url in self.crypto_faucets:
-            print(f"Visiting {url}")
-            self.browser.get(url)
-            self.login(url=url)
-            self.claim_faucet(url=url)
-            self.check_balance(url=url)
+            try:
+                print(f"Visiting {url}")
+                self.browser.get(url)
+                self.login(url=url)
+                self.claim_faucet(url=url)
+                self.check_balance(url=url)
+            except Exception as e:
+                print(e)
+                break
         self.browser.quit()
 
     def collect_crypto_faucets(self, crypto_faucets: str):
@@ -107,8 +117,9 @@ class CryptoClaimer:
             password_field = self.browser.find_element_by_name("pass")
             password_field.send_keys(password)
 
-            # submit_login_button = self.driver.find_element_by_class_name("main-btn")
-            # submit_login_button.submit()
+            submit_login_button = self.browser.find_element_by_class_name(
+                "main-btn")
+            submit_login_button.submit()
         elif url in (
                 "https://freebinancecoin.com",
                 "https://freenem.com",
