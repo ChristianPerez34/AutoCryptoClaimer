@@ -7,7 +7,7 @@ authors = ["Christian Pérez Villanueva <perez.villanueva.christian34@gmail.com>
 [tool.poetry.dependencies]
 python = "^3.7"
 selenium = "^3.141.0"
-APScheduler = "^3.6.3"
+APScheduler = "^3.7.0"
 msedge-selenium-tools = "^3.141.3"
 
 [tool.poetry.dev-dependencies]
